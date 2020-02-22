@@ -1,14 +1,8 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <script
-      crossorigin
-      src="https://unpkg.com/react@16/umd/react.development.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
-    ></script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
   </head>
   <body>
@@ -21,30 +15,51 @@
             first: Math.ceil(Math.random() * 9),
             second: Math.ceil(Math.random() * 9),
             value: '',
-            result: ''
+            result: '',
+            answer: ''
           };
         }
+
+        onChange = e => {
+          this.setState({
+            value: e.target.value
+          });
+        };
+
+        onSubmit = e => {
+          e.preventDefault();
+          if (parseInt(this.state.value) === this.state.first * this.state.second) {
+            this.setState({
+              result: '정답',
+              first: Math.ceil(Math.random() * 9),
+              second: Math.ceil(Math.random() * 9),
+              value: '',
+              answer: this.state.first * this.state.second
+            });
+          } else {
+            this.setState({
+              result: '땡',
+              value: '',
+              answer: ''
+            });
+          }
+        };
         render() {
           return (
             <div>
               <div>
                 {this.state.first} 곱하기 {this.state.second} 는 ?
               </div>
-              <form>
-                <input
-                  type="number"
-                  value={this.state.value}
-                  onChange={e =>
-                    this.setState({
-                      value: e.target.value
-                    })
-                  }
-                />
+              <form onSubmit={this.onSubmit}>
+                <input type="number" value={this.state.value} onChange={this.onChange} />
                 <button>입력!</button>
               </form>
-              <div>{this.state.result} </div>
+              <div>
+                {this.state.result === '정답' ? this.state.answer + ':' : ''} {this.state.result}
+              </div>
             </div>
           );
+          //   onclick , onchange , oninput, onload, onfocus, onblur
         }
       }
     </script>
