@@ -8,67 +8,45 @@
   <body>
     <div id="root"></div>
     <script type="text/babel">
-      class GuGuDan extends React.Component {
-        state = {
-          first: Math.ceil(Math.random() * 9),
-          second: Math.ceil(Math.random() * 9),
-          value: '',
-          result: ''
+      const GuGuDan = () => {
+        const [first, setFirst] = React.useState(Math.ceil(Math.random() * 9));
+        const [second, setSecond] = React.useState(Math.ceil(Math.random() * 9));
+        const [value, setValue] = React.useState('');
+        const [result, setResult] = React.useState('');
+        const inputRef = React.useRef(null);
+
+        const onChangeInput = e => {
+          setValue(e.target.value);
         };
 
-        onChange = e => {
-          this.setState({
-            value: e.target.value
-          });
-        };
-
-        onSubmit = e => {
+        const onSubmitForm = e => {
           e.preventDefault();
-          if (parseInt(this.state.value) === this.state.first * this.state.second) {
-            this.setState(prevState => {
-              return {
-                result: '정답' + prevState.value,
-                first: Math.ceil(Math.random() * 9),
-                second: Math.ceil(Math.random() * 9),
-                value: ''
-              };
-            });
+          if (parseInt(value) === first * second) {
+            setResult('정답' + value);
+            setFirst(Math.ceil(Math.random() * 9));
+            setSecond(Math.ceil(Math.random() * 9));
+            setValue('');
+            inputRef.current.focus();
           } else {
-            this.setState({
-              result: '땡',
-              value: '',
-              answer: ''
-            });
-            this.input.focus();
+            setResult('땡');
+            setValue('');
+            inputRef.current.focus();
           }
         };
 
-        input;
-
-        render() {
-          console.log('렌더링');
-          return (
-            <React.Fragment>
-              <div>
-                {this.state.first} 곱하기 {this.state.second} 는 ?
-              </div>
-              <form onSubmit={this.onSubmit}>
-                <input
-                  ref={c => {
-                    this.input = c;
-                  }}
-                  type="number"
-                  value={this.state.value}
-                  onChange={this.onChange}
-                />
-                <button>입력!</button>
-              </form>
-              <div>{this.state.result}</div>
-            </React.Fragment>
-          );
-          //   onclick , onchange , oninput, onload, onfocus, onblur
-        }
-      }
+        return (
+          <React.Fragment>
+            <div>
+              {first} 곱하기 {second} 는 ?
+            </div>
+            <form onSubmit={onSubmitForm}>
+              <input ref={inputRef} type="number" value={value} onChange={onChangeInput} />
+              <button>입력!</button>
+            </form>
+            <div>{result}</div>
+          </React.Fragment>
+        );
+      };
     </script>
     <script type="text/babel">
       ReactDOM.render(<GuGuDan />, document.querySelector('#root'));
