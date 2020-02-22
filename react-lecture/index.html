@@ -9,16 +9,13 @@
     <div id="root"></div>
     <script type="text/babel">
       class GuGuDan extends React.Component {
-        constructor(props) {
-          super(props);
-          this.state = {
-            first: Math.ceil(Math.random() * 9),
-            second: Math.ceil(Math.random() * 9),
-            value: '',
-            result: '',
-            answer: ''
-          };
-        }
+        state = {
+          first: Math.ceil(Math.random() * 9),
+          second: Math.ceil(Math.random() * 9),
+          value: '',
+          result: '',
+          answer: ''
+        };
 
         onChange = e => {
           this.setState({
@@ -46,7 +43,7 @@
         };
         render() {
           return (
-            <div>
+            <React.Fragment>
               <div>
                 {this.state.first} 곱하기 {this.state.second} 는 ?
               </div>
@@ -57,7 +54,7 @@
               <div>
                 {this.state.result === '정답' ? this.state.answer + ':' : ''} {this.state.result}
               </div>
-            </div>
+            </React.Fragment>
           );
           //   onclick , onchange , oninput, onload, onfocus, onblur
         }
