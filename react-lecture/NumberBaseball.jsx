@@ -25,11 +25,14 @@ class NumberBaseball extends Component {
     });
   };
   onSubmitForm = e => {
+    console.log('onSubmitForm');
     e.preventDefault();
     if (this.state.value === this.state.answer.join('')) {
-      this.setState({
-        results: '홈런!',
-        tries: [...this.state.tries, { try: this.state.value, result: '홈런!' }]
+      this.setState(prevState => {
+        return {
+          results: '홈런!',
+          tries: [...prevState.tries, { try: prevState.value, result: '홈런!' }]
+        };
       });
       alert('게임을 다시 시작합니다!');
       this.setState({
@@ -60,8 +63,10 @@ class NumberBaseball extends Component {
             ball += 1;
           }
         }
-        this.setState({
-          tries: [...this.state.tries, { try: this.state.value, result: `${strike} 스트라이크, ${ball} 볼입니다.` }]
+        this.setState(prevState => {
+          return {
+            tries: [...prevState.tries, { try: prevState.value, result: `${strike} 스트라이크, ${ball} 볼입니다.` }]
+          };
         });
       }
     }
