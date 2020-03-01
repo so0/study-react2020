@@ -1,7 +1,8 @@
 const path = require('path');
+// process.env.NODE_ENV = 'production'; // 배포 모드 설정
 module.exports = {
   name: 'wordrelay-setting',
-  mode: 'development', // 실 서비스 : production
+  mode: 'development', // 실 서비스 : production  , 개발: development
   devtool: 'eval', // 빠르게 하겠다?..
   resolve: {
     extensions: ['.js', '.jsx']

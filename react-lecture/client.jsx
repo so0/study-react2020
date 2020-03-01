@@ -7,6 +7,8 @@ import { hot } from 'react-hot-loader/root';
 
 import WordRelay from './WordRelay';
 import NumberBaseball from './NumberBaseball';
+import RenderTest from './RenderTest';
 // const WordRelay = require('./WordRelay');
-const Hot = hot(NumberBaseball);
+// const Hot = hot(NumberBaseball);
+const Hot = hot(RenderTest);
 ReactDOM.render(<Hot />, document.querySelector('#root'));
