@@ -33,6 +33,7 @@ const NumberBaseball = () => {
       setValue('');
       setAnswer(getNumbers());
       setTries([]);
+      setResult('');
     } else {
       // 틀렸을 때
       console.log('tries', tries);
@@ -41,11 +42,11 @@ const NumberBaseball = () => {
       let ball = 0;
       if (tries.length >= 9) {
         setResult(`10번 넘게 틀려서 실패 답은 ${answer.join(',')} 입니다.`);
-
         alert('게임을 다시 시작합니다!');
         setValue('');
         setAnswer(getNumbers());
         setTries([]);
+        setResult('');
       } else {
         for (let i = 0; i < 4; i++) {
           if (answerArray[i] === answer[i]) {
