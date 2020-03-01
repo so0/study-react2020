@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import Try from './Try';
 
 function getNumbers() {
@@ -11,6 +11,8 @@ function getNumbers() {
   }
   return array;
 }
+
+// 자식들이 모두 purecomponent or memo 적용되어있으면 부모에도 적용할 수 있다.
 const NumberBaseball = () => {
   const [result, setResult] = useState('');
   const [value, setValue] = useState('');
