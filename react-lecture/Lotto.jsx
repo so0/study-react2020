@@ -25,11 +25,14 @@ function getWinNumbers() {
 }
 
 const Lotto = () => {
-  const [winNumbers, setWinNumbers] = useState(getWinNumbers());
+  console.log('Lotto');
+  // 함수 컴포넌트는 전체가 재 실행됨
   const [winBalls, setWinBalls] = useState([]);
+  const lottoNumbers = useMemo(() => getWinNumbers(), []); // 함수 결과값 기억, 두번째 인자값의 요소가 바뀔 때 호출됨
+  const [winNumbers, setWinNumbers] = useState(lottoNumbers);
   const [bonus, setBonus] = useState(null);
   const [redo, setRedo] = useState(false);
-  const timeouts = useRef([]);
+  const timeouts = useRef([]); // 일반 값 기억
 
   // useEffect(() => {
   //   runTimeouts();
@@ -54,19 +57,16 @@ const Lotto = () => {
       });
     };
   }, [timeouts.current]); // 배열에 요소가 있으면 componentDidMount, componentDidUpdate 둘 다 수행
-  const onClickRedo = () => {
+  const onClickRedo = useCallback(() => {
+    // useCallback 함수 생성 비용이 클때 함수 자체를 기억해둠
     console.log('onClickRedo');
+    console.log('winNumbers', winNumbers);
     setWinNumbers(getWinNumbers());
     setWinBalls([]);
     setBonus(null);
     setRedo(false);
     timeouts.current = [];
-  };
-
-  const runTimeouts = () => {
-    console.log('runTimeouts');
-  };
-
+  }, [winNumbers]); // 두번째 인자가 바뀌면 새로 실행
   return (
     <>
       <div>당첨 숫자</div>
@@ -78,6 +78,7 @@ const Lotto = () => {
       <div>보너스!</div>
       {bonus && <Ball number={bonus} />}
       {redo && <button onClick={onClickRedo}>한 번 더!</button>}
+      {/* 자식 컴포넌트에 props 로 함수를 넘길 때는 useCallback 사용하기.  새로운 함수 매번 생성되기 때문에 */}
     </>
   );
 };
