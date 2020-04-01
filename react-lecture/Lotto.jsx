@@ -38,6 +38,16 @@ const Lotto = () => {
   //   runTimeouts();
   // }, []); // 빈 배열이면 componentDidMount
 
+  // useEffect 를 componentDidUpdate처럼 쓰는 패턴
+  // const mounted = useRef(false);
+  // useEffect(() => {
+  //   if (!mounted.current) {
+  //     mounted.current = true;
+  //   } else {
+  //     // ajax
+  //   }
+  // }, [바뀌는 값]); // componentDidMount X,  componentDidUpdate O
+
   useEffect(() => {
     console.log('useEffect');
     for (let i = 0; i < winNumbers.length - 1; i++) {
