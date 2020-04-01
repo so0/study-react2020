@@ -5,12 +5,14 @@ import { hot } from 'react-hot-loader/root';
 // const ReactDOM = require('react-dom');
 // const { hot } = require('react-hot-loader/root');
 
+import RSP from './RSP';
 import ResponseCheck from './ResponseCheck';
 import WordRelay from './WordRelay';
 import NumberBaseball from './NumberBaseball';
 import RenderTest from './RenderTest';
+const Hot = hot(RSP);
 // const WordRelay = require('./WordRelay');
-const Hot = hot(ResponseCheck);
+// const Hot = hot(ResponseCheck);
 // const Hot = hot(NumberBaseball);
 // const Hot = hot(RenderTest); // PureComponent
 ReactDOM.render(<Hot />, document.querySelector('#root'));
