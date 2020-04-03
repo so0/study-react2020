@@ -18,16 +18,22 @@ const Tr = memo(({ rowData, rowIndex, dispatch }) => {
     <tr>
       {Array(rowData.length)
         .fill()
-        .map((td, i) => (
-          <Td
-            key={i}
-            dispatch={dispatch}
-            rowIndex={rowIndex}
-            cellIndex={i}
-            cellData={rowData[i]}>
-            {''}
-          </Td>
-        ))}
+        .map((td, i) =>
+          // 컴포넌트도 useMemo로 기억할 수 있음
+          useMemo(
+            () => (
+              <Td
+                key={i}
+                dispatch={dispatch}
+                rowIndex={rowIndex}
+                cellIndex={i}
+                cellData={rowData[i]}>
+                {''}
+              </Td>
+            ),
+            [rowData[i]]
+          )
+        )}
     </tr>
   );
 });
