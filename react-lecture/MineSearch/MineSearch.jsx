@@ -12,6 +12,39 @@ export const CODE = {
   CLICKED_MINE: -6,
   OPEND: 0, // 0 이상이면 opend
 };
+
+const plantMine = (row, cell, mine) => {
+  console.log(row, cell, mine);
+  const candidate = Array(row * cell)
+    .fill()
+    .map((arr, i) => {
+      return i;
+    });
+  const shuffle = [];
+  while (candidate.length > row * cell - mine) {
+    const chosen = candidate.splice(
+      Math.floor(Math.random() * candidate.length),
+      1
+    )[0];
+    shuffle.push(chosen);
+  }
+  console.log('shuffle', shuffle);
+  const data = [];
+  for (let i = 0; i < row; i++) {
+    const rowData = [];
+    data.push(rowData);
+    for (let j = 0; j < cell; j++) {
+      rowData.push(CODE.NORMAL);
+    }
+  }
+  for (let k = 0; k < shuffle.length; k++) {
+    const ver = Math.floor(shuffle[k] / cell);
+    const hor = shuffle[k] % cell;
+    data[ver][hor] = CODE.MINE;
+  }
+  console.log('data', data);
+  return data;
+};
 export const TableContext = createContext({
   // -1 -7
   tableData: [[], [], [], []],
@@ -39,7 +72,10 @@ const reducer = (state, action) => {
 const MineSearch = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = useMemo(() => {
-    tableData: state.tableData, dispatch;
+    return {
+      tableData: state.tableData,
+      dispatch,
+    };
   }, [state.tableData]);
   return (
     <TableContext.Provider value={value}>
