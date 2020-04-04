@@ -9,7 +9,7 @@ const Table = () => {
       {Array(tableData.length)
         .fill()
         .map((tr, i) => (
-          <Tr rowIndex={i}></Tr>
+          <Tr key={i} rowIndex={i}></Tr>
         ))}
     </table>
   );
