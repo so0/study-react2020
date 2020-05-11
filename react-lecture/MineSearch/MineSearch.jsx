@@ -58,6 +58,12 @@ const initialState = {
   timer: 0,
   result: '',
   halted: false,
+  opendCount: 0,
+  data: {
+    row: 0,
+    cell: 0,
+    mine: 0,
+  },
 };
 
 export const START_GAME = 'START_GAME';
@@ -74,6 +80,11 @@ const reducer = (state, action) => {
         ...state,
         tableData: plantMine(action.row, action.cell, action.mine),
         halted: false,
+        data: {
+          row: action.row,
+          cell: action.cell,
+          mine: action.mine,
+        },
       };
     case OPEN_CELL: {
       const tableData = [...state.tableData];
@@ -81,6 +92,7 @@ const reducer = (state, action) => {
         tableData[i] = [...state.tableData[i]];
       });
       const checked = [];
+      let opendCount = 0;
       const checkAround = (row, cell) => {
         if (
           [
@@ -98,7 +110,7 @@ const reducer = (state, action) => {
           row < 0 ||
           row > tableData.length ||
           cell < 0 ||
-          cell >= tableData[0].length
+          cell > tableData[0].length - 1
         ) {
           // 상하좌우 칸이 아닌경우 필터링
           return;
@@ -108,6 +120,7 @@ const reducer = (state, action) => {
         } else {
           checked.push(row + ',' + cell);
         }
+        opendCount++;
         let around = [];
         if (tableData[row - 1]) {
           around.push(
@@ -159,12 +172,23 @@ const reducer = (state, action) => {
         }
       };
       checkAround(action.row, action.cell);
-      // tableData[action.row] = [...state.tableData[action.row]];
-      // tableData[action.row][action.cell] = CODE.OPENED;
+      let halted = false;
+      let result = '';
+      if (
+        state.data.row * state.data.cell - state.data.mine ===
+        state.opendCount + opendCount
+      ) {
+        // 승리
+        halted = true;
+        result = '승리하셨습니다.';
+      }
 
       return {
         ...state,
         tableData,
+        opendCount: state.opendCount + opendCount,
+        halted,
+        result,
       };
     }
     case CLICK_MINE: {
