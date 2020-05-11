@@ -77,33 +77,90 @@ const reducer = (state, action) => {
       };
     case OPEN_CELL: {
       const tableData = [...state.tableData];
-      tableData[action.row] = [...state.tableData[action.row]];
-      tableData[action.row][action.cell] = CODE.OPENED;
-      let around = [];
-      if (tableData[action.row - 1]) {
+      tableData.forEach((row, i) => {
+        tableData[i] = [...state.tableData[i]];
+      });
+      const checked = [];
+      const checkAround = (row, cell) => {
+        if (
+          [
+            CODE.OPENED,
+            CODE.FLAG_MINE,
+            CODE.FLAG_MINE,
+            CODE.QUESTION_MINE,
+            CODE.QUESTION,
+          ].includes(tableData[(row, cell)])
+        ) {
+          // 닫힌 칸만 열기
+          return;
+        }
+        if (
+          row < 0 ||
+          row > tableData.length ||
+          cell < 0 ||
+          cell >= tableData[0].length
+        ) {
+          // 상하좌우 칸이 아닌경우 필터링
+          return;
+        }
+        if (checked.includes(row + ',' + cell)) {
+          return;
+        } else {
+          checked.push(row + ',' + cell);
+        }
+        let around = [];
+        if (tableData[row - 1]) {
+          around.push(
+            tableData[row - 1][cell - 1],
+            tableData[row - 1][cell],
+            tableData[row - 1][cell + 1]
+          );
+        }
         around.push(
-          tableData[action.row - 1][action.cell - 1],
-          tableData[action.row - 1][action.cell],
-          tableData[action.row - 1][action.cell + 1]
+          tableData[row][cell - 1],
+          tableData[row][cell],
+          tableData[row][cell + 1]
         );
-      }
-      around.push(
-        tableData[action.row][action.cell - 1],
-        tableData[action.row][action.cell],
-        tableData[action.row][action.cell + 1]
-      );
-      if (tableData[action.row + 1]) {
-        around.push(
-          tableData[action.row + 1][action.cell - 1],
-          tableData[action.row + 1][action.cell],
-          tableData[action.row + 1][action.cell + 1]
-        );
-      }
-      const count = around.filter((v) =>
-        [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)
-      ).length;
-      console.log('count', count);
-      tableData[action.row][action.cell] = count;
+        if (tableData[row + 1]) {
+          around.push(
+            tableData[row + 1][cell - 1],
+            tableData[row + 1][cell],
+            tableData[row + 1][cell + 1]
+          );
+        }
+        const count = around.filter((v) =>
+          [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)
+        ).length;
+        console.log('count', count);
+        tableData[row][cell] = count;
+        if (count === 0) {
+          // 주변칸 오픈
+          const near = [];
+          if (row > 0) {
+            near.push([row - 1, cell - 1]);
+            near.push([row - 1, cell]);
+            near.push([row - 1, cell + 1]);
+          }
+          near.push([row, cell - 1]);
+          near.push([row, cell + 1]);
+          if (row + 1 > tableData.length) {
+            near.push([row + 1, cell - 1]);
+            near.push([row + 1, cell]);
+            near.push([row + 1, cell + 1]);
+          }
+          near
+            .filter((v) => !!v)
+            .forEach((n) => {
+              if (tableData[n[0]][n[1]] !== CODE.OPENED) {
+                // 주변칸 열기
+                checkAround(n[0], n[1]);
+              }
+            });
+        }
+      };
+      checkAround(action.row, action.cell);
+      // tableData[action.row] = [...state.tableData[action.row]];
+      // tableData[action.row][action.cell] = CODE.OPENED;
 
       return {
         ...state,
