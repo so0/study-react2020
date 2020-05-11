@@ -3,14 +3,15 @@ import Table from './Table';
 import Form from './Form';
 
 export const CODE = {
-  MINE: -7,
-  NORMAL: -1,
-  QUESTION: -2,
-  FLAG: -3,
-  QUESTION_MINE: -4,
-  FLAG_MINE: -5,
-  CLICKED_MINE: -6,
-  OPENED: 0, // 0 이상이면 opend
+  MINE: -7, // 지뢰
+  NORMAL: -1, // 정상
+  /// 클릭
+  QUESTION: -2, // 물음표
+  FLAG: -3, // 깃발
+  QUESTION_MINE: -4, // 물음표 + 지뢰
+  FLAG_MINE: -5, // 깃발 + 지뢰
+  CLICKED_MINE: -6, // 지뢰 클릭
+  OPENED: 0, // 0 이상이면 opend (성공적으로 연거, 주변 지뢰 정보 )
 };
 
 const plantMine = (row, cell, mine) => {
@@ -78,6 +79,32 @@ const reducer = (state, action) => {
       const tableData = [...state.tableData];
       tableData[action.row] = [...state.tableData[action.row]];
       tableData[action.row][action.cell] = CODE.OPENED;
+      let around = [];
+      if (tableData[action.row - 1]) {
+        around.push(
+          tableData[action.row - 1][action.cell - 1],
+          tableData[action.row - 1][action.cell],
+          tableData[action.row - 1][action.cell + 1]
+        );
+      }
+      around.push(
+        tableData[action.row][action.cell - 1],
+        tableData[action.row][action.cell],
+        tableData[action.row][action.cell + 1]
+      );
+      if (tableData[action.row + 1]) {
+        around.push(
+          tableData[action.row + 1][action.cell - 1],
+          tableData[action.row + 1][action.cell],
+          tableData[action.row + 1][action.cell + 1]
+        );
+      }
+      const count = around.filter((v) =>
+        [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v)
+      ).length;
+      console.log('count', count);
+      tableData[action.row][action.cell] = count;
+
       return {
         ...state,
         tableData,
@@ -139,10 +166,11 @@ const reducer = (state, action) => {
 const MineSearch = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { tableData, halted, timer, result } = state;
+  // 매번 새로운 객체가 생기지 않게 useMemo 로  value 객체 기억함
   const value = useMemo(() => {
     return {
       tableData: tableData,
-      dispatch,
+      dispatch, // dispatch 는 바뀌지 않음
       halted: halted,
     };
   }, [tableData, halted]);

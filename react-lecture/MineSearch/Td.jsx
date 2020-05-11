@@ -8,7 +8,7 @@ import {
   QUESTION_CELL,
   NORMALIZE_CELL,
 } from './MineSearch';
-const getTdStyle = code => {
+const getTdStyle = (code) => {
   console.log('CODE', CODE);
   switch (code) {
     case CODE.NORMAL:
@@ -37,7 +37,7 @@ const getTdStyle = code => {
       };
   }
 };
-const getTdText = code => {
+const getTdText = (code) => {
   console.log('code', code);
   switch (code) {
     case CODE.NORMAL:
@@ -53,7 +53,7 @@ const getTdText = code => {
     case CODE.QUESTION:
       return '?';
     default:
-      return '';
+      return code || '';
   }
 };
 const Td = ({ rowIndex, cellIndex }) => {
@@ -80,7 +80,7 @@ const Td = ({ rowIndex, cellIndex }) => {
     }
   }, [tableData[rowIndex][cellIndex], halted]);
   const onRightClickTd = useCallback(
-    e => {
+    (e) => {
       if (halted) {
         return;
       }
