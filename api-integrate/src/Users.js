@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import axios from 'axios';
 import useAsync from './useAsync';
-async function getUsers() {
+import User from './User';
+async function getUsers(id) {
   const response = await axios.get(
-    'https://jsonplaceholder.typicode.com/users'
+    `https://jsonplaceholder.typicode.com/users`
   );
   return response.data;
 }
 
-function Users() {
-  const [state, refetch] = useAsync(getUsers, [], true);
+function Users({ id }) {
+  const [state, refetch] = useAsync(() => getUsers(id), [id]);
+  const [userId, setUserId] = useState('');
 
   const { loading, error, data: users } = state;
 
@@ -20,12 +22,16 @@ function Users() {
     <>
       <ul>
         {users.map((user) => (
-          <li key={user.id}>
+          <li
+            key={user.id}
+            onClick={() => setUserId(user.id)}
+            style={{ cursor: 'pointer' }}>
             {user.username} ({user.name})
           </li>
         ))}
       </ul>
       fetchUsers <button onClick={refetch}>다시 불러오기</button>
+      {userId && <User id={userId}></User>}
     </>
   );
 }
